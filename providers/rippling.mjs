@@ -198,7 +198,12 @@ export default {
       try {
         json = await fetchJsonWithRetry(ctx, url, { redirect: 'error' }, RETRY_POLICY);
       } catch (err) {
-        if (probing) throw err;
+        // A failure on the FIRST page means we never saw the board at all (a 404
+        // for a slug that doesn't exist, DNS, auth…). Returning [] there reported
+        // "board exists, 0 jobs", which discover-ats turned into a phantom
+        // "board found but empty" for every company name it probed. Only a
+        // failure after at least one good page is a truncation.
+        if (probing || page === 0) throw err;
         const attempts = err?.attempts ?? RETRY_POLICY.retries + 1;
         console.error(`⚠️  rippling: ${entry.name} truncated at page ${page + 1} of ${pagesToFetch} after ${attempts} attempts (${jobs.length} jobs): ${err.message}`);
         stopReason = STOP_REASON.FETCH_ERROR;

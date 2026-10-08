@@ -3376,6 +3376,15 @@ async function main() {
   const companies = Array.isArray(config.tracked_companies) ? config.tracked_companies : [];
   const boards = Array.isArray(config.job_boards) ? config.job_boards : [];
   const titleFilter = buildTitleFilter(config.title_filter);
+  // title_filter_overrides (a per-company wider positive net) was only honoured by
+  // scan-ats-full.mjs. Honour it here too, keyed by the portals.yml entry name or
+  // the posting's company name (lowercased). Strictly additive: with no overrides
+  // configured, or for any company not listed, filtering is unchanged.
+  const titleFilterOverrides = buildTitleFilterOverrides(config.title_filter_overrides);
+  const titleFilterForCompany = buildTitleFilterWithOverrides(config.title_filter, titleFilterOverrides);
+  const titlePasses = (job, entry) => titleFilter(job.title)
+    || (titleFilterOverrides.size > 0
+      && (titleFilterForCompany(job.title, entry?.name) || titleFilterForCompany(job.title, job.company)));
 
   // Seniority tier classifier integration
   let classifyTier = null;
@@ -3611,7 +3620,7 @@ async function main() {
           }
         }
 
-        if (!titleFilter(job.title)) {
+        if (!titlePasses(job, company)) {
           totalFilteredTitle++;
           continue;
         }

@@ -47,7 +47,9 @@ import { BROWSER_LIKE_USER_AGENT, fetchJsonWithRetry, sleep } from './_http.mjs'
 // `oraclecloud(?:[1-9][0-9]?)?` = oraclecloud.com plus oraclecloud1.com …
 // oraclecloud99.com. No leading zero, at most two digits — a bounded family,
 // so this stays a host pin and never becomes a wildcard apex match.
-const ORACLE_HOST_RE = /^[a-z0-9-]+\.fa\.(?:[a-z0-9-]+\.)?(?:ocs\.)?oraclecloud(?:[1-9][0-9]?)?\.com$/i;
+// `.eu` is Oracle's EU-sovereign apex (observed live: Danske Bank,
+// ejqi.fa.ocs.oraclecloud.eu, same API). Still a bounded, pinned family.
+const ORACLE_HOST_RE = /^[a-z0-9-]+\.fa\.(?:[a-z0-9-]+\.)?(?:ocs\.)?oraclecloud(?:[1-9][0-9]?)?\.(?:com|eu)$/i;
 
 const PAGE_SIZE = 200;
 const MAX_PAGES = 25;             // safety cap (~5000 jobs); hard ceiling like workday
