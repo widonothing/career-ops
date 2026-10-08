@@ -9,8 +9,11 @@ git clone https://github.com/widonothing/career-ops.git
 cd career-ops
 npm install
 npx playwright install chromium
+printf 'FORK-NOTES.md\ntools/\n' > config/local-paths.txt   # declares this fork's own files
 claude          # then say hi — the onboarding asks for your CV and targets
 ```
+
+`config/local-paths.txt` tells the updater and the test suite that `FORK-NOTES.md` and `tools/` belong to this fork. It's git-ignored by design, so every clone creates it once; without it, `node test-all.mjs` reports a "SYSTEM_PATHS coverage gap".
 
 The upstream [README](README.md) has the full documentation.
 
@@ -24,7 +27,14 @@ The upstream [README](README.md) has the full documentation.
      template: nordic
    ```
 
-   It uses the **Lato** font, which must be installed on your machine (Ubuntu: `sudo apt install fonts-lato`; Windows/macOS: download from Google Fonts and install). Without it the CV falls back to Arial-like fonts.
+   A matching **cover letter** template ships in the same folder, so the CV and letter look like a set:
+
+   ```yaml
+   cover_letter:
+     template: nordic
+   ```
+
+   Both use the **Lato** font, which must be installed on your machine (Ubuntu: `sudo apt install fonts-lato`; Windows/macOS: download from Google Fonts and install). Without it the CV falls back to Arial-like fonts.
 3. **People viewer** (`tools/people-viewer/`) — a read-only local web page to browse the offers, scores and reports of one or more people's career-ops folders:
 
    ```bash
