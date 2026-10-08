@@ -63,7 +63,6 @@
     font-weight: 600;
     color: var(--ink);
   }
-  .header-gradient { display: none; }
   .contact-row {
     margin-top: 5pt;
     padding-bottom: 7pt;
@@ -123,7 +122,7 @@
   .job ul, .project ul { margin-top: 2pt; padding-left: 11pt; }
   .job li { margin-bottom: 1.5pt; }
   .job li::marker { color: var(--muted); }
-  .job ul:empty { display: none; }
+  .job ul:empty { margin: 0; }
 
   /* === PROJECTS === */
   .project { margin-bottom: 6pt; break-inside: avoid; }
@@ -157,7 +156,6 @@
   <div class="header">
     <h1>{{NAME}}</h1>
     {{TITLE_BLOCK}}
-    <div class="header-gradient"></div>
     <div class="contact-row">
       <a href="tel:{{PHONE}}">{{PHONE}}</a>
       <span class="separator">|</span>
